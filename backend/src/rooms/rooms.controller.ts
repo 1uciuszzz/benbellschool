@@ -1,4 +1,10 @@
-import { Controller, Get, Param, Post } from "@nestjs/common";
+import {
+  Controller,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+} from "@nestjs/common";
 import { RoomsService } from "./rooms.service";
 import { Auth } from "src/auth/decorators/auth.decorator";
 import { AuthType } from "src/auth/enums/auth-type.enum";
@@ -17,17 +23,27 @@ export class RoomsController {
 
   @Get(":roomId")
   @Auth(AuthType.Bearer)
-  async getRoomUsers(@Param("roomId") roomId: string) {
+  async getRoomDetails(@Param("roomId") roomId: string) {
+    const room = await this.roomsService.getRoom(roomId);
     const roomUsers = await this.roomsService.getRoomUsers(roomId);
     const expenditureStats =
       await this.roomsService.getUsersExpenditureStats(roomId);
-    return { roomUsers, expenditureStats };
+    const expenditures = await this.roomsService.getExpenditures(roomId);
+    return { room, roomUsers, expenditureStats, expenditures };
+  }
+
+  @Get(":roomId/users")
+  @Auth(AuthType.Bearer)
+  async getRoomUsers(@Param("roomId") roomId: string) {
+    return await this.roomsService.getRoomUsers(roomId);
   }
 
   @Post("join/:roomId")
   @Auth(AuthType.Bearer)
   async joinRoom(@User() user: TokenPayload, @Param("roomId") roomId: string) {
-    return await this.roomsService.joinRoom(user.name, roomId);
+    const isInRoom = await this.roomsService.isInRoom(user.sub, roomId);
+    if (isInRoom) throw new ForbiddenException("You are already in the room");
+    return await this.roomsService.joinRoom(user.sub, roomId);
   }
 
   @Get()

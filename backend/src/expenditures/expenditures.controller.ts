@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from "@nestjs/common";
+import { Controller, Param, Post } from "@nestjs/common";
 import { ExpendituresService } from "./expenditures.service";
 import { Auth } from "src/auth/decorators/auth.decorator";
 import { AuthType } from "src/auth/enums/auth-type.enum";
@@ -23,11 +23,5 @@ export class ExpendituresController {
       payeeId,
       amount,
     );
-  }
-
-  @Get()
-  @Auth(AuthType.Bearer)
-  async getExpenditures() {
-    return await this.expendituresService.getExpenditures();
   }
 }

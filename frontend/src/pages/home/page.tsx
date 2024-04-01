@@ -1,5 +1,11 @@
+import MainActions from "./mainActions";
+
 const HomePage = () => {
-  return <div>HomePage</div>;
+  return (
+    <div className="m-8">
+      <MainActions />
+    </div>
+  );
 };
 
 export default HomePage;

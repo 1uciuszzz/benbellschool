@@ -11,6 +11,26 @@ export const router = createBrowserRouter([
           Component: (await import("./pages/home/page")).default,
         }),
       },
+      {
+        path: "/rooms",
+        lazy: async () => ({
+          Component: (await import("./pages/rooms/page")).default,
+        }),
+      },
+      {
+        path: "/rooms/:id",
+        lazy: async () => ({
+          Component: (await import("./pages/rooms/roomDetail")).default,
+        }),
+        children: [
+          {
+            path: "pay/:payeeId",
+            lazy: async () => ({
+              Component: (await import("./pages/rooms/payForm")).default,
+            }),
+          },
+        ],
+      },
     ],
   },
   {

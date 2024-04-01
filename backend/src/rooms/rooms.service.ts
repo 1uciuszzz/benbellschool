@@ -5,10 +5,27 @@ import { PrismaService } from "src/prisma.service";
 export class RoomsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getRoom(roomId: string) {
+    return await this.prisma.room.findUnique({
+      where: {
+        id: roomId,
+      },
+    });
+  }
+
   async createRoom(userName: string) {
     return await this.prisma.room.create({
       data: {
-        name: `${new Date().getTime()}：${userName}创建的房间`,
+        name: `${userName}创建的房间`,
+      },
+    });
+  }
+
+  async isInRoom(userId: string, roomId: string) {
+    return await this.prisma.roomUser.findFirst({
+      where: {
+        userId,
+        roomId,
       },
     });
   }
@@ -23,12 +40,12 @@ export class RoomsService {
   }
 
   async getRoomUsers(roomId: string) {
-    const roomUserMap = await this.prisma.roomUser.findMany({
+    const roomUsers = await this.prisma.roomUser.findMany({
       where: {
         roomId,
       },
     });
-    const userIds = roomUserMap.map((item) => item.userId);
+    const userIds = roomUsers.map((item) => item.userId);
     return await this.prisma.user.findMany({
       where: {
         id: {
@@ -39,14 +56,20 @@ export class RoomsService {
   }
 
   async getRooms() {
-    return await this.prisma.room.findMany();
+    return await this.prisma.room.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
   }
 
   async getUsersExpenditureStats(roomId: string) {
     const roomUsers = await this.getRoomUsers(roomId);
-    const userStats = new Map<string, number>();
-    roomUsers.forEach((user) => {
-      userStats.set(user.id, 0);
+    const userStats = roomUsers.map((user) => {
+      return {
+        userId: user.id,
+        amount: 0,
+      };
     });
     const expenditures = await this.prisma.expenditure.findMany({
       where: {
@@ -54,15 +77,27 @@ export class RoomsService {
       },
     });
     expenditures.forEach((expenditure) => {
-      userStats.set(
-        expenditure.payerId,
-        userStats.get(expenditure.payerId) - expenditure.amount,
-      );
-      userStats.set(
-        expenditure.payeeId,
-        userStats.get(expenditure.payeeId) + expenditure.amount,
-      );
+      userStats.map((user) => {
+        if (user.userId === expenditure.payerId) {
+          user.amount -= expenditure.amount;
+        }
+        if (user.userId === expenditure.payeeId) {
+          user.amount += expenditure.amount;
+        }
+        return user;
+      });
     });
     return userStats;
+  }
+
+  async getExpenditures(roomId: string) {
+    return await this.prisma.expenditure.findMany({
+      where: {
+        roomId,
+      },
+      orderBy: {
+        createAt: "desc",
+      },
+    });
   }
 }

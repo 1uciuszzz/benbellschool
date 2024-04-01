@@ -20,8 +20,4 @@ export class ExpendituresService {
       },
     });
   }
-
-  async getExpenditures() {
-    return await this.prisma.expenditure.findMany();
-  }
 }
