@@ -13,83 +13,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Role {
-  id          String           @id @default(uuid())
-  name        String           @unique
-  description String
-  active      Boolean          @default(false)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  users       User[]
-  permissions RolePermission[]
-}
-
-model Permission {
-  id          String           @id @default(uuid())
-  name        String           @unique
-  description String
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  roles       RolePermission[]
-}
-
-model RolePermission {
-  role         Role       @relation(fields: [roleId], references: [id])
-  roleId       String
-  permission   Permission @relation(fields: [permissionId], references: [id])
-  permissionId String
-  assignedAt   DateTime   @default(now())
-
-  @@id([roleId, permissionId])
-}
-
-enum Gender {
-  MAN
-  WOMAN
-  OTHER
-}
-
 model User {
-  id       String  @id @default(uuid())
-  username String  @unique
-  password String
-  name     String
-  phone    String
-  icNumber String
-  gender   Gender
-  email    String
-  active   Boolean @default(false)
-  role     Role?   @relation(fields: [roleId], references: [id])
-  roleId   String?
+  id   String @id @default(uuid())
+  name String @unique
 }
 
-model File {
-  id        String   @id @default(uuid())
-  sha256    String   @unique
-  size      Int
-  bytes     Bytes
-  mimeType  String
+model Room {
+  id   String @id @default(uuid())
+  name String
+
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
-model LargeFile {
-  id        String           @id @default(uuid())
-  sha256    String           @unique
-  name      String
-  size      String
-  mimeType  String
-  chunks    LargeFileChunk[]
-  uploadId  String?
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+model RoomUser {
+  userId String
+  roomId String
+
+  @@id([userId, roomId])
 }
 
-model LargeFileChunk {
-  id          String    @id @default(uuid())
-  etag        String
-  partNumber  Int
-  createdAt   DateTime  @default(now())
-  largeFile   LargeFile @relation(fields: [largeFileId], references: [id])
-  largeFileId String
+model Expenditure {
+  id       String   @id @default(uuid())
+  payerId  String
+  payeeId  String
+  amount   Float
+  roomId   String
+  createAt DateTime @default(now())
 }

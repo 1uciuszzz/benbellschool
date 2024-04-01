@@ -1,17 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import { BcryptService } from "src/bcrypt.service";
 import { PrismaService } from "src/prisma.service";
 import JwtConfig from "./config/jwt.config";
-import { Gender } from "@prisma/client";
-import { Permission } from "src/shared/enums/permission.enum";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly bcrypt: BcryptService,
     private readonly jwtService: JwtService,
     @Inject(JwtConfig.KEY)
     private readonly jwtConfig: ConfigType<typeof JwtConfig>,
@@ -32,74 +28,40 @@ export class AuthService {
     );
   }
 
-  async getUserByUsername(username: string) {
+  async getUserByName(name: string) {
     const user = await this.prisma.user.findUnique({
       where: {
-        username,
+        name,
       },
     });
     return user;
   }
 
-  async signUp(
-    username: string,
-    password: string,
-    name: string,
-    gender: Gender,
-    icNumber: string,
-    email: string,
-    phone: string,
-  ) {
-    password = await this.bcrypt.hash(password);
+  async signUp(name: string) {
     const user = await this.prisma.user.create({
       data: {
-        username,
-        password,
         name,
-        gender,
-        icNumber,
-        email,
-        phone,
       },
     });
     return user;
   }
 
-  async signIn(username: string, password: string) {
+  async signIn(name: string) {
     const user = await this.prisma.user.findUnique({
       where: {
-        username,
-      },
-      include: {
-        role: true,
+        name,
       },
     });
-    const match = await this.bcrypt.compare(password, user.password);
-    return match ? user : null;
+    return user;
   }
 
-  async generateToken(id: string, roleId: string) {
-    const token = await this.signToken<{ roleId: string }>(
+  async generateToken(id: string, name: string) {
+    const token = await this.signToken<{ name: string }>(
       id,
       this.jwtConfig.accessTokenTtl,
-      { roleId },
+      { name },
     );
     return `Bearer ${token}`;
-  }
-
-  async checkPermissions(roleId: string, permissionName: Permission) {
-    const permission = await this.prisma.permission.findUnique({
-      where: { name: permissionName },
-    });
-    const target = await this.prisma.rolePermission.findUnique({
-      where: {
-        roleId_permissionId: {
-          permissionId: permission.id,
-          roleId,
-        },
-      },
-    });
-    return !!target;
   }
 
   async getUserInfo(userId: string) {
@@ -108,19 +70,6 @@ export class AuthService {
         id: userId,
       },
     });
-    const permissions = await this.prisma.permission.findMany({
-      include: {
-        roles: true,
-      },
-      where: {
-        roles: {
-          some: {
-            roleId: user.roleId,
-          },
-        },
-      },
-    });
-    user.password = undefined;
-    return { ...user, permissions: permissions.map((p) => p.name) };
+    return user;
   }
 }

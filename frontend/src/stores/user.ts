@@ -1,24 +1,20 @@
 import { create } from "zustand";
-import { Permission } from "../types/permission.enum";
 
 interface UserState {
   id: string;
-  username: string;
-  permissions: Permission[];
+  name: string;
 
   setId: (id: string) => void;
-  setUsername: (username: string) => void;
-  setPermissions: (permissions: Permission[]) => void;
+  setName: (username: string) => void;
 }
 
 export const useUser = create<UserState>()((set) => {
   return {
     id: "",
-    username: "",
+    name: "",
     permissions: [],
     setId: (id: string) => set((state) => ({ ...state, id })),
-    setUsername: (username: string) => set((state) => ({ ...state, username })),
-    setPermissions: (permissions: Permission[]) =>
-      set((state) => ({ ...state, permissions })),
+    setName: (username: string) =>
+      set((state) => ({ ...state, name: username })),
   };
 });
