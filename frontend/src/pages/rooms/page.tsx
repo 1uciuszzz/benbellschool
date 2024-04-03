@@ -11,6 +11,7 @@ export interface Room {
   name: string;
   active: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
 const Rooms = () => {

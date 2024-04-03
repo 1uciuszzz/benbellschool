@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useImmer } from "use-immer";
 import { Room } from "./page";
 import {
+  Alert,
   Button,
   Card,
   CardContent,
@@ -87,9 +88,11 @@ const RoomDetail = () => {
         <Typography variant="h4">房间详情</Typography>
       </div>
 
-      <Button onClick={getRoomDetail} variant="contained" color="success">
-        刷新数据
-      </Button>
+      {room?.active ? (
+        <Button onClick={getRoomDetail} variant="contained" color="success">
+          刷新数据
+        </Button>
+      ) : null}
 
       {users.find((user) => user.id == userId) ? null : (
         <Button variant="contained" onClick={joinRoom}>
@@ -97,7 +100,11 @@ const RoomDetail = () => {
         </Button>
       )}
 
-      <Button onClick={closeRoom}>关闭房间</Button>
+      {room?.active ? null : (
+        <Alert severity="info">
+          房间关闭于{room && new Date(room?.updatedAt).toLocaleString()}
+        </Alert>
+      )}
 
       <Card>
         <CardContent>
@@ -111,6 +118,7 @@ const RoomDetail = () => {
                     variant="outlined"
                     className="flex flex-col justify-center items-center"
                     onClick={() => callPayForm(user.id)}
+                    disabled={room?.active ? false : true}
                   >
                     <Typography variant="body1">{user.name}</Typography>
                     <Typography variant="body2">
@@ -131,7 +139,7 @@ const RoomDetail = () => {
         <div className="flex flex-col space-y-2">
           {expenditures.map((expenditure) => {
             return (
-              <Card>
+              <Card key={expenditure.id}>
                 <CardContent>
                   <div className="flex flex-col space-y-1">
                     <Typography key={expenditure.id} variant="body1">
@@ -156,6 +164,8 @@ const RoomDetail = () => {
           })}
         </div>
       ) : null}
+
+      {room?.active ? <Button onClick={closeRoom}>关闭房间</Button> : null}
 
       <Outlet />
     </div>
