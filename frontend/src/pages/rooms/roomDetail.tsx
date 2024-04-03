@@ -114,11 +114,11 @@ const RoomDetail = () => {
       </Card>
 
       {expenditures.length ? (
-        <Card>
-          <CardContent>
-            <div className="flex flex-col space-y-2">
-              {expenditures.map((expenditure) => {
-                return (
+        <div className="flex flex-col space-y-2">
+          {expenditures.map((expenditure) => {
+            return (
+              <Card>
+                <CardContent>
                   <div className="flex flex-col space-y-1">
                     <Typography key={expenditure.id} variant="body1">
                       {
@@ -132,15 +132,15 @@ const RoomDetail = () => {
                       }{" "}
                       {expenditure.amount}元
                     </Typography>
-                    <p className="font-mono ml-auto">
+                    <p className="font-mono font-sm">
                       {new Date(expenditure.createAt).toLocaleString()}
                     </p>
                   </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       ) : null}
 
       <Outlet />
