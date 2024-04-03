@@ -119,14 +119,23 @@ const RoomDetail = () => {
             <div className="flex flex-col space-y-2">
               {expenditures.map((expenditure) => {
                 return (
-                  <Typography key={expenditure.id} variant="body1">
-                    {users.find((user) => user.id == expenditure.payerId)?.name}
-                    付给
-                    {
-                      users.find((user) => user.id == expenditure.payeeId)?.name
-                    }{" "}
-                    {expenditure.amount}元
-                  </Typography>
+                  <div className="flex flex-col space-y-1">
+                    <Typography key={expenditure.id} variant="body1">
+                      {
+                        users.find((user) => user.id == expenditure.payerId)
+                          ?.name
+                      }
+                      付给
+                      {
+                        users.find((user) => user.id == expenditure.payeeId)
+                          ?.name
+                      }{" "}
+                      {expenditure.amount}元
+                    </Typography>
+                    <p className="font-mono ml-auto">
+                      {new Date(expenditure.createAt).toLocaleString()}
+                    </p>
+                  </div>
                 );
               })}
             </div>
