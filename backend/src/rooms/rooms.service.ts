@@ -92,6 +92,7 @@ export class RoomsService {
 
   async getExpenditures(roomId: string) {
     return await this.prisma.expenditure.findMany({
+      take: 10,
       where: {
         roomId,
       },
@@ -107,7 +108,7 @@ export class RoomsService {
         id: roomId,
       },
       data: {
-        active: true,
+        active: false,
       },
     });
   }

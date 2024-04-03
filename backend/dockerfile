@@ -2,13 +2,7 @@ FROM node:18
 
 WORKDIR /app
 
-COPY . .
-
-RUN npm install
-
-RUN npx prisma generate
-
-RUN npm run build
+COPY ./dist .
 
 EXPOSE 3000
 
