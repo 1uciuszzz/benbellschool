@@ -2,7 +2,7 @@ import {
   AppBar,
   Button,
   Dialog,
-  DialogActions,
+  DialogContent,
   DialogTitle,
   Toolbar,
   Typography,
@@ -39,12 +39,20 @@ const LogOut = forwardRef<LogOutHandles, LogOutProps>((_, ref) => {
   };
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
+    <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
       <DialogTitle>退出登录</DialogTitle>
-      <DialogActions>
-        <Button onClick={() => setOpen(false)}>取消</Button>
-        <Button onClick={logOut}>确定</Button>
-      </DialogActions>
+      <DialogContent className="flex flex-col space-y-4">
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => setOpen(false)}
+        >
+          取消
+        </Button>
+        <Button variant="contained" color="success" onClick={logOut}>
+          确定
+        </Button>
+      </DialogContent>
     </Dialog>
   );
 });
