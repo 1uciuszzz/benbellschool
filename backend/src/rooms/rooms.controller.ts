@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Get,
   Param,
+  Patch,
   Post,
 } from "@nestjs/common";
 import { RoomsService } from "./rooms.service";
@@ -50,5 +51,11 @@ export class RoomsController {
   @Auth(AuthType.Bearer)
   async getRooms() {
     return await this.roomsService.getRooms();
+  }
+
+  @Patch(":roomId/close")
+  @Auth(AuthType.Bearer)
+  async closeRoom(@Param("roomId") roomId: string) {
+    return await this.roomsService.closeRoom(roomId);
   }
 }

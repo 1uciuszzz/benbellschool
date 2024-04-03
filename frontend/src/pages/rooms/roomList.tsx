@@ -22,6 +22,9 @@ const RoomItem = ({ room }: RoomItemProps) => {
             <Typography variant="body1">
               {new Date(room.createdAt).toLocaleString()}
             </Typography>
+            <Typography variant="body1" color={room.active ? "green" : "red"}>
+              {room.active ? "进行中" : "已关闭"}
+            </Typography>
           </div>
         </CardContent>
       </CardActionArea>

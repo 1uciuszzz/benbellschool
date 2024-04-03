@@ -44,4 +44,6 @@ export const ROOMS_API = {
     http.get(`/rooms/${id}`),
   JOIN_ROOM: (id: string): Promise<AxiosResponse> =>
     http.post(`/rooms/join/${id}`),
+  CLOSE_ROOM: (id: string): Promise<AxiosResponse> =>
+    http.patch(`/rooms/${id}/close`),
 };

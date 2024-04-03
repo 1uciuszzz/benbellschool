@@ -68,6 +68,18 @@ const RoomDetail = () => {
     }
   };
 
+  const closeRoom = async () => {
+    try {
+      activate(true);
+      await ROOMS_API.CLOSE_ROOM(id as string);
+      navigate(`/rooms`);
+    } catch {
+      console.error("Failed to close room");
+    } finally {
+      activate(false);
+    }
+  };
+
   return (
     <div className="m-8 flex flex-col space-y-8">
       <div className="flex items-center">
@@ -84,6 +96,8 @@ const RoomDetail = () => {
           加入房间
         </Button>
       )}
+
+      <Button onClick={closeRoom}>关闭房间</Button>
 
       <Card>
         <CardContent>

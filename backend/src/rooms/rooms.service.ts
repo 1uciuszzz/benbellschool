@@ -100,4 +100,15 @@ export class RoomsService {
       },
     });
   }
+
+  async closeRoom(roomId: string) {
+    return await this.prisma.room.update({
+      where: {
+        id: roomId,
+      },
+      data: {
+        active: true,
+      },
+    });
+  }
 }

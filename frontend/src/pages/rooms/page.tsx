@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 export interface Room {
   id: string;
   name: string;
+  active: boolean;
   createdAt: string;
 }
 

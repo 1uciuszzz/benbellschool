@@ -19,8 +19,9 @@ model User {
 }
 
 model Room {
-  id   String @id @default(uuid())
-  name String
+  id     String  @id @default(uuid())
+  name   String
+  active Boolean @default(true)
 
   createdAt DateTime @default(now())
 }
