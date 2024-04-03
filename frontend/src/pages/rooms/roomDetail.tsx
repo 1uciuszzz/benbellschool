@@ -69,7 +69,7 @@ const RoomDetail = () => {
   };
 
   return (
-    <div className="m-4 flex flex-col space-y-8">
+    <div className="m-8 flex flex-col space-y-8">
       <div className="flex items-center">
         <IconButton onClick={() => navigate(`/rooms`)}>👈</IconButton>
         <Typography variant="h4">房间详情</Typography>
