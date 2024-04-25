@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useUser } from "../../stores/user";
+import { ArrowBackIosNew } from "@mui/icons-material";
 
 const RoomDetail = () => {
   const { id } = useParams();
@@ -84,7 +85,9 @@ const RoomDetail = () => {
   return (
     <div className="m-8 flex flex-col space-y-8">
       <div className="flex items-center">
-        <IconButton onClick={() => navigate(`/rooms`)}>👈</IconButton>
+        <IconButton onClick={() => navigate(`/rooms`)}>
+          <ArrowBackIosNew />
+        </IconButton>
         <Typography variant="h4">房间详情</Typography>
       </div>
 

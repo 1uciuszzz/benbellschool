@@ -1,6 +1,6 @@
-import { AxiosResponse } from "axios";
 import { http } from "../utils/http";
 import { Room } from "../pages/rooms/page";
+import { Pagination, Res } from "./type";
 
 export interface User {
   id: string;
@@ -34,16 +34,27 @@ interface CreateRoomResponse {
   createdAt: string;
 }
 
+interface RoomListItem {
+  id: string;
+  name: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface GetRoomsResponse {
+  rooms: RoomListItem[];
+  total: number;
+}
+
 export const ROOMS_API = {
-  CREATE_ROOM: (): Promise<AxiosResponse<CreateRoomResponse>> =>
-    http.post(`/rooms`),
-  GET_ROOMS: (): Promise<AxiosResponse> => http.get(`/rooms`),
-  GET_USERS: (roomId: string): Promise<AxiosResponse<User[]>> =>
+  CREATE_ROOM: (): Res<CreateRoomResponse> => http.post(`/rooms`),
+  GET_ROOMS: (payload: Pagination): Res<GetRoomsResponse> =>
+    http.get(`/rooms`, { params: payload }),
+  GET_USERS: (roomId: string): Res<User[]> =>
     http.get(`/rooms/${roomId}/users`),
-  ROOM_DETAIL: (id: string): Promise<AxiosResponse<RoomDetailResponse>> =>
+  ROOM_DETAIL: (id: string): Res<RoomDetailResponse> =>
     http.get(`/rooms/${id}`),
-  JOIN_ROOM: (id: string): Promise<AxiosResponse> =>
-    http.post(`/rooms/join/${id}`),
-  CLOSE_ROOM: (id: string): Promise<AxiosResponse> =>
-    http.patch(`/rooms/${id}/close`),
+  JOIN_ROOM: (id: string) => http.post(`/rooms/join/${id}`),
+  CLOSE_ROOM: (id: string) => http.patch(`/rooms/${id}/close`),
 };

@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { ROOMS_API } from "../../apis/rooms";
-import CardButton from "../../components/cardButton";
 import { useLoading } from "../../stores/loading";
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
@@ -64,13 +63,19 @@ const MainActions = () => {
   const CreateRoomRef = useRef<CreateRoomHandles>(null);
 
   return (
-    <div className="w-full flex space-x-8">
+    <div className="w-full flex flex-col space-y-8">
       <CreateRoom ref={CreateRoomRef} />
-      <CardButton
-        label="创建房间"
+      <Button
+        fullWidth
+        size="large"
+        variant="contained"
         onClick={() => CreateRoomRef.current?.open()}
-      />
-      <CardButton label="房间列表" onClick={toRoomList} />
+      >
+        创建房间
+      </Button>
+      <Button size="large" fullWidth variant="contained" onClick={toRoomList}>
+        房间列表
+      </Button>
     </div>
   );
 };
