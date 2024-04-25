@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
 import { RoomsService } from "./rooms.service";
 import { Auth } from "src/auth/decorators/auth.decorator";
@@ -49,8 +50,13 @@ export class RoomsController {
 
   @Get()
   @Auth(AuthType.Bearer)
-  async getRooms() {
-    return await this.roomsService.getRooms();
+  async getRooms(@Query("page") page: number, @Query("size") size: number) {
+    page = page || 1;
+    size = size || 10;
+    const skip = (page - 1) * size;
+    const rooms = await this.roomsService.getRooms(skip, size);
+    const total = await this.roomsService.getCount();
+    return { total, rooms };
   }
 
   @Patch(":roomId/close")

@@ -55,11 +55,13 @@ export class RoomsService {
     });
   }
 
-  async getRooms() {
+  async getRooms(skip: number, take: number) {
     return await this.prisma.room.findMany({
       orderBy: {
         createdAt: "desc",
       },
+      skip,
+      take,
     });
   }
 
@@ -112,4 +114,9 @@ export class RoomsService {
       },
     });
   }
+
+  getCount = async () => {
+    const count = await this.prisma.room.count();
+    return count;
+  };
 }
