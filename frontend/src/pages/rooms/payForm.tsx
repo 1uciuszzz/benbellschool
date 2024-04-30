@@ -71,7 +71,7 @@ const PayForm = () => {
           value={amount}
           type="number"
           autoFocus
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => setAmount(e.target.value || undefined)}
         />
         <Button variant="contained" onClick={pay}>
           确定
