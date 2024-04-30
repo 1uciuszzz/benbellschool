@@ -1,4 +1,4 @@
-import { Controller, Param, Post } from "@nestjs/common";
+import { Controller, ForbiddenException, Param, Post } from "@nestjs/common";
 import { ExpendituresService } from "./expenditures.service";
 import { Auth } from "src/auth/decorators/auth.decorator";
 import { AuthType } from "src/auth/enums/auth-type.enum";
@@ -17,6 +17,8 @@ export class ExpendituresController {
     @Param("payeeId") payeeId: string,
     @Param("amount") amount: number,
   ) {
+    if (amount <= 0)
+      throw new ForbiddenException("Amount must be greater than 0");
     return await this.expendituresService.createExpenditure(
       roomId,
       user.sub,

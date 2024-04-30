@@ -17,18 +17,21 @@ const PayForm = () => {
 
   const { id, payeeId } = useParams();
 
-  const [amount, setAmount] = useImmer<number | undefined>(undefined);
+  const [amount, setAmount] = useImmer<string | undefined>(undefined);
 
   const navigate = useNavigate();
 
   const pay = async () => {
+    if (!amount) return;
+    if (!Number.isSafeInteger(+amount)) return;
+    if (+amount <= 0) return;
     try {
       activate(true);
       if (amount === undefined) return;
       await EXPENDITURES_API.CREATE_EXPENDITURE(
         id as string,
         payeeId as string,
-        amount
+        +amount
       );
       navigate(`/rooms/${id}`);
     } catch {
@@ -68,7 +71,7 @@ const PayForm = () => {
           value={amount}
           type="number"
           autoFocus
-          onChange={(e) => setAmount(+e.target.value)}
+          onChange={(e) => setAmount(e.target.value)}
         />
         <Button variant="contained" onClick={pay}>
           确定
