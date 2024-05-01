@@ -20,8 +20,6 @@ export class AuthService {
         ...payload,
       },
       {
-        audience: this.jwtConfig.audience,
-        issuer: this.jwtConfig.issuer,
         secret: this.jwtConfig.secret,
         expiresIn,
       },
@@ -73,3 +71,4 @@ export class AuthService {
     return user;
   }
 }
+
