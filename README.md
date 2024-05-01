@@ -23,8 +23,6 @@ backend:
     # 请修改下列变量
     DATABASE_URL: postgresql://postgres:postgres@db:23301/postgres?schema=public
     JWT_SECRET: 78b37db2f09767c7ad3eb47c903739359c69aa57080c2710db92fcb1809f8cd4
-    JWT_TOKEN_AUDIENCE: "192.168.100.27:23302"
-    JWT_TOKEN_ISSUER: "192.168.100.27:23302"
     JWT_ACCESS_TOKEN_TTL: 86400
   ports:
     - "23302:3000"
