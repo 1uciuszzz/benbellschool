@@ -34,17 +34,25 @@ const CreateRoom = forwardRef<CreateRoomHandles, CreateRoomProps>((_, ref) => {
     }
   };
 
+  const loading = useLoading((state) => state.active);
+
   return (
     <Dialog fullWidth open={open} onClose={() => setOpen(false)}>
       <DialogTitle>确定创建房间吗</DialogTitle>
       <DialogContent className="flex flex-col space-y-4">
-        <Button variant="contained" color="success" onClick={createRoom}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={createRoom}
+          disabled={loading}
+        >
           确定
         </Button>
         <Button
           variant="contained"
           color="warning"
           onClick={() => setOpen(false)}
+          disabled={loading}
         >
           取消
         </Button>
@@ -60,6 +68,8 @@ const MainActions = () => {
     navigate("/rooms");
   };
 
+  const loading = useLoading((state) => state.active);
+
   const CreateRoomRef = useRef<CreateRoomHandles>(null);
 
   return (
@@ -70,10 +80,17 @@ const MainActions = () => {
         size="large"
         variant="contained"
         onClick={() => CreateRoomRef.current?.open()}
+        disabled={loading}
       >
         创建房间
       </Button>
-      <Button size="large" fullWidth variant="contained" onClick={toRoomList}>
+      <Button
+        size="large"
+        fullWidth
+        variant="contained"
+        onClick={toRoomList}
+        disabled={loading}
+      >
         房间列表
       </Button>
     </div>

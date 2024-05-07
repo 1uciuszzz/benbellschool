@@ -15,6 +15,8 @@ import { useEffect } from "react";
 const PayForm = () => {
   const activate = useLoading((state) => state.activate);
 
+  const loading = useLoading((state) => state.active);
+
   const { id, payeeId } = useParams();
 
   const [amount, setAmount] = useImmer<string | undefined>(undefined);
@@ -73,13 +75,14 @@ const PayForm = () => {
           autoFocus
           onChange={(e) => setAmount(e.target.value || undefined)}
         />
-        <Button variant="contained" onClick={pay}>
+        <Button variant="contained" onClick={pay} disabled={loading}>
           确定
         </Button>
         <Button
           variant="contained"
           color="error"
           onClick={() => navigate(`/rooms/${id}`)}
+          disabled={loading}
         >
           取消
         </Button>

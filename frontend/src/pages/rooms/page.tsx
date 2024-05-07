@@ -18,6 +18,8 @@ export interface Room {
 const Rooms = () => {
   const activate = useLoading((state) => state.activate);
 
+  const loading = useLoading((state) => state.active);
+
   const [rooms, setRooms] = useImmer<Room[]>([]);
 
   const [total, setTotal] = useImmer<number>(0);
@@ -49,12 +51,17 @@ const Rooms = () => {
   return (
     <div className="m-8 flex flex-col space-y-8">
       <div className="flex">
-        <IconButton onClick={() => navigate(`/`)}>
+        <IconButton onClick={() => navigate(`/`)} disabled={loading}>
           <ArrowBackIosNew />
         </IconButton>
         <Typography variant="h4">房间列表</Typography>
       </div>
-      <Button onClick={getRooms} variant="contained" color="success">
+      <Button
+        onClick={getRooms}
+        variant="contained"
+        color="success"
+        disabled={loading}
+      >
         刷新数据
       </Button>
       <RoomList rooms={rooms} />
@@ -63,6 +70,7 @@ const Rooms = () => {
         size="large"
         count={Math.ceil(total / size)}
         page={page}
+        disabled={loading}
         onChange={(_, page) => setPage(page)}
         siblingCount={1}
       />

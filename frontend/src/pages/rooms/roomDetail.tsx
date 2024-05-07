@@ -82,23 +82,30 @@ const RoomDetail = () => {
     }
   };
 
+  const loading = useLoading((state) => state.active);
+
   return (
     <div className="m-8 flex flex-col space-y-8">
       <div className="flex items-center">
-        <IconButton onClick={() => navigate(`/rooms`)}>
+        <IconButton onClick={() => navigate(`/rooms`)} disabled={loading}>
           <ArrowBackIosNew />
         </IconButton>
         <Typography variant="h4">房间详情</Typography>
       </div>
 
       {room?.active ? (
-        <Button onClick={getRoomDetail} variant="contained" color="success">
+        <Button
+          onClick={getRoomDetail}
+          variant="contained"
+          color="success"
+          disabled={loading}
+        >
           刷新数据
         </Button>
       ) : null}
 
       {users.find((user) => user.id == userId) ? null : (
-        <Button variant="contained" onClick={joinRoom}>
+        <Button variant="contained" onClick={joinRoom} disabled={loading}>
           加入房间
         </Button>
       )}
@@ -109,34 +116,37 @@ const RoomDetail = () => {
         </Alert>
       )}
 
-      <Card>
-        <CardContent>
-          <div className="flex flex-col space-y-4">
-            <Typography variant="body1">{room?.name}</Typography>
-            <div className="grid grid-cols-2 gap-4">
-              {users.map((user) => {
-                return (
-                  <Button
-                    key={user.id}
-                    variant="outlined"
-                    className="flex flex-col justify-center items-center"
-                    onClick={() => callPayForm(user.id)}
-                    disabled={room?.active ? false : true}
-                  >
-                    <Typography variant="body1">{user.name}</Typography>
-                    <Typography variant="body2">
-                      {
-                        expenditureStats.find((stat) => stat.userId == user.id)
-                          ?.amount
-                      }
-                    </Typography>
-                  </Button>
-                );
-              })}
+      {users.find((user) => user.id == userId) ? (
+        <Card>
+          <CardContent>
+            <div className="flex flex-col space-y-4">
+              <Typography variant="body1">{room?.name}</Typography>
+              <div className="grid grid-cols-2 gap-4">
+                {users.map((user) => {
+                  return (
+                    <Button
+                      key={user.id}
+                      variant="outlined"
+                      className="flex flex-col justify-center items-center"
+                      onClick={() => callPayForm(user.id)}
+                      disabled={room?.active ? false : true}
+                    >
+                      <Typography variant="body1">{user.name}</Typography>
+                      <Typography variant="body2">
+                        {
+                          expenditureStats.find(
+                            (stat) => stat.userId == user.id
+                          )?.amount
+                        }
+                      </Typography>
+                    </Button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {expenditures.length ? (
         <div className="flex flex-col space-y-2">
@@ -168,7 +178,11 @@ const RoomDetail = () => {
         </div>
       ) : null}
 
-      {room?.active ? <Button onClick={closeRoom}>关闭房间</Button> : null}
+      {room?.active ? (
+        <Button onClick={closeRoom} disabled={loading}>
+          关闭房间
+        </Button>
+      ) : null}
 
       <Outlet />
     </div>
