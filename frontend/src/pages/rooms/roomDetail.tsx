@@ -1,7 +1,7 @@
 import { useLoading } from "../../stores/loading";
 import { Expenditure, ROOMS_API, User, UserStats } from "../../apis/rooms";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import { Room } from "./page";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useUser } from "../../stores/user";
 import { ArrowBackIosNew } from "@mui/icons-material";
+import Share, { ShareHandles } from "./share";
 
 const RoomDetail = () => {
   const { id } = useParams();
@@ -83,6 +84,8 @@ const RoomDetail = () => {
   };
 
   const loading = useLoading((state) => state.active);
+
+  const ShareRef = useRef<ShareHandles>(null);
 
   return (
     <div className="m-8 flex flex-col space-y-8">
@@ -183,6 +186,12 @@ const RoomDetail = () => {
           关闭房间
         </Button>
       ) : null}
+
+      {room ? (
+        <Button onClick={() => ShareRef.current?.open()}>分享房间</Button>
+      ) : null}
+
+      <Share ref={ShareRef} />
 
       <Outlet />
     </div>
