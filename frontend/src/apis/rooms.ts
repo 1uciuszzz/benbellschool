@@ -8,7 +8,8 @@ export interface User {
 }
 
 export interface UserStats {
-  userId: string;
+  id: string;
+  name: string;
   amount: number;
 }
 

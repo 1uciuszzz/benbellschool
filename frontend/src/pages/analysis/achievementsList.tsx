@@ -37,7 +37,9 @@ const AchievementsList = ({ data }: AchievementsListProps) => {
                 primary={
                   <div>
                     <Typography variant="body2">{item.roomName}</Typography>
-                    <Typography variant="caption">{item.date}</Typography>
+                    <Typography variant="caption">
+                      {new Date(item.date).toLocaleString()}
+                    </Typography>
                   </div>
                 }
               />

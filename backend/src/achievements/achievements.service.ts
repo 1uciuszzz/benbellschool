@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { randomUUID } from "crypto";
 import { PrismaService } from "src/prisma.service";
-import { Achievement } from "./dto/achievement.dto";
 
 @Injectable()
 export class AchievementsService {
@@ -102,7 +101,7 @@ export class AchievementsService {
       skip,
       take,
     });
-    const achievements: Achievement[] = [];
+    const achievements = [];
     for (let i = 0; i < rooms.length; i++) {
       const payNumber = await this.prisma.expenditure.aggregate({
         _sum: {
@@ -135,7 +134,7 @@ export class AchievementsService {
         id: randomUUID(),
         roomName: room.name,
         winNumber: receiveNumber._sum.amount - payNumber._sum.amount,
-        date: room.updatedAt.toLocaleString(),
+        date: room.updatedAt,
       });
     }
     achievements.sort(

@@ -67,28 +67,34 @@ export class RoomsService {
 
   async getUsersExpenditureStats(roomId: string) {
     const roomUsers = await this.getRoomUsers(roomId);
-    const userStats = roomUsers.map((user) => {
-      return {
-        userId: user.id,
-        amount: 0,
-      };
-    });
-    const expenditures = await this.prisma.expenditure.findMany({
-      where: {
-        roomId,
-      },
-    });
-    expenditures.forEach((expenditure) => {
-      userStats.map((user) => {
-        if (user.userId === expenditure.payerId) {
-          user.amount -= expenditure.amount;
-        }
-        if (user.userId === expenditure.payeeId) {
-          user.amount += expenditure.amount;
-        }
-        return user;
-      });
-    });
+    const userStats = await Promise.all(
+      roomUsers.map(async (user) => {
+        const payed = await this.prisma.expenditure.aggregate({
+          _sum: {
+            amount: true,
+          },
+          where: {
+            roomId,
+            payerId: user.id,
+          },
+        });
+        const received = await this.prisma.expenditure.aggregate({
+          _sum: {
+            amount: true,
+          },
+          where: {
+            roomId,
+            payeeId: user.id,
+          },
+        });
+        const status = received._sum.amount - payed._sum.amount;
+        return {
+          id: user.id,
+          name: user.name,
+          amount: status,
+        };
+      }),
+    );
     return userStats;
   }
 

@@ -125,23 +125,17 @@ const RoomDetail = () => {
             <div className="flex flex-col space-y-4">
               <Typography variant="body1">{room?.name}</Typography>
               <div className="grid grid-cols-2 gap-4">
-                {users.map((user) => {
+                {expenditureStats.map((item) => {
                   return (
                     <Button
-                      key={user.id}
+                      key={item.id}
                       variant="outlined"
                       className="flex flex-col justify-center items-center"
-                      onClick={() => callPayForm(user.id)}
+                      onClick={() => callPayForm(item.id)}
                       disabled={room?.active ? false : true}
                     >
-                      <Typography variant="body1">{user.name}</Typography>
-                      <Typography variant="body2">
-                        {
-                          expenditureStats.find(
-                            (stat) => stat.userId == user.id
-                          )?.amount
-                        }
-                      </Typography>
+                      <Typography variant="body1">{item.name}</Typography>
+                      <Typography variant="body2">{item.amount}</Typography>
                     </Button>
                   );
                 })}
